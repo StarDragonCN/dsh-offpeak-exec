@@ -8,7 +8,7 @@
 
 因为等待期间不向模型发出任何请求，所以等待本身不花钱；同样的 token 在谷时只付约一半的价钱。
 
-![谷时执行](docs/preview.svg)
+![谷时执行](https://raw.githubusercontent.com/StarDragonCN/dsh-offpeak-exec/main/docs/preview.svg)
 
 ## 安装
 

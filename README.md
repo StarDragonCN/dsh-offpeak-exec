@@ -8,7 +8,7 @@ A [DeepSeek Harness](https://github.com/deepseek-ai/dsh) (DSH) plugin that puts 
 
 No model request is made while waiting, so waiting itself is free — and the same tokens cost roughly half once the clock reaches off-peak.
 
-![Off-peak run](docs/preview.svg)
+![Off-peak run](https://raw.githubusercontent.com/StarDragonCN/dsh-offpeak-exec/main/docs/preview.svg)
 
 ## Install
 
@@ -45,7 +45,7 @@ Other details:
 - The switch is **per conversation**. It survives a page refresh and keeps showing the right state when you switch sessions.
 - After a Host restart the switch returns to off — status is not persisted, so you never believe you saved money when you did not.
 - The longest wait is about 3 hours (`09:00 → 12:00` is the worst case).
-- While waiting, the conversation shows a running state and the switch reads "Queued · runs at 12:00".
+- While waiting, the conversation shows a running state and the switch reads "Queued · runs 12:00".
 
 ## Also without the mouse
 
