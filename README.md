@@ -6,6 +6,8 @@
 
 ![谷时执行](docs/preview.svg)
 
+> **English** — A [DeepSeek Harness](https://github.com/deepseek-ai/dsh) (DSH) plugin. It adds a switch next to the composer. While it is on, a message you send during DeepSeek peak pricing (Beijing time, workdays `09:00–12:00` and `14:00–18:00`) is held and only starts at the next off-peak hour — `12:00`, `18:00`, or `09:00` on the next workday. No model request is made while waiting, so waiting costs nothing, and off-peak pricing is roughly half of peak. Messages sent while a task is already running are held the same way. The switch is per conversation, off by default, and returns to off when the Host restarts.
+
 ## 它解决什么
 
 DeepSeek 按北京时间分时段计价：工作日 `09:00–12:00`、`14:00–18:00` 为高峰，其余时间（含周末、法定假日、以及周五 18:00 之后的整个周末）为谷时，谷时价格约为高峰的一半。
