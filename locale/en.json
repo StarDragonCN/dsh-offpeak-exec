@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "Off-peak run",
+    "description": "Adds an \"Off-peak run\" switch to the left of the composer tool row. When on, a message sent during DeepSeek peak pricing (Beijing time, workdays 09:00-12:00 and 14:00-18:00) does not call the model right away: it starts at the next off-peak hour (12:00, 18:00, or 09:00 the next workday; weekends and public holidays are off-peak all day), and costs nothing while waiting. Follow-up messages you send while a task is already running wait the same way. Off-peak pricing is about half of peak. The switch applies to this conversation only and returns to off after a Host restart; when off, behavior is unchanged. The /offpeak on|off|status command toggles it as well. While waiting, the conversation shows as running, and stopping it cancels the task.",
+    "detail": "docs/DETAIL.md"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "name": "@local/dsh-offpeak-exec",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Off-peak run switch for DSH: hold messages sent during DeepSeek peak pricing and start them when off-peak rates apply.",
+  "license": "MIT",
+  "author": "StarDragonCN",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek",
+    "off-peak",
+    "scheduling",
+    "pricing"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StarDragonCN/dsh-offpeak-exec.git"
+  },
+  "homepage": "https://github.com/StarDragonCN/dsh-offpeak-exec#readme",
+  "bugs": {
+    "url": "https://github.com/StarDragonCN/dsh-offpeak-exec/issues"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "docs",
+    "icon.svg"
+  ],
+  "scripts": {
+    "test": "node test/host.test.mjs && node test/client.test.mjs && node test/client-state.test.mjs"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-conversation"
+      ]
+    }
+  }
+}

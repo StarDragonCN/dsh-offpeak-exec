@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="300" viewBox="0 0 640 300">
+  <rect width="640" height="300" rx="20" fill="#f4f6fa"/>
+
+  <!-- clock: the task starts at the next off-peak hour -->
+  <circle cx="104" cy="158" r="56" fill="#ffffff" stroke="#ccd6e2" stroke-width="2"/>
+  <g stroke="#a9b8ca" stroke-width="2.6" stroke-linecap="round">
+    <path d="M104 108v7"/>
+    <path d="M104 201v7"/>
+    <path d="M54 158h7"/>
+    <path d="M147 158h7"/>
+  </g>
+  <g stroke="#47586d" stroke-width="3.6" stroke-linecap="round">
+    <path d="M104 158v-26"/>
+    <path d="M104 158v22"/>
+  </g>
+  <circle cx="104" cy="158" r="3.6" fill="#47586d"/>
+
+  <!-- crescent badge: off-peak pricing -->
+  <circle cx="142" cy="196" r="20" fill="#eaf1fd" stroke="#ccd6e2" stroke-width="1.5"/>
+  <path transform="translate(127.2 181.2) scale(0.8)" fill="#2f6df6"
+        d="M27.4 21.6A10.6 10.6 0 0 1 14.4 8.6 10.6 10.6 0 1 0 27.4 21.6Z"/>
+
+  <!-- composer card -->
+  <rect x="204" y="98" width="396" height="120" rx="18" fill="#ffffff" stroke="#ccd6e2" stroke-width="2"/>
+  <rect x="232" y="126" width="212" height="9" rx="4.5" fill="#c8d3e1"/>
+  <rect x="232" y="146" width="142" height="9" rx="4.5" fill="#d8e1ec"/>
+
+  <!-- switch on, one message queued for the next off-peak hour -->
+  <rect x="228" y="184" width="170" height="28" rx="14" fill="#e9f0fd" stroke="#2f6df6" stroke-width="1.6"/>
+  <path transform="translate(237.6 191.4) scale(0.62)" fill="#2f6df6"
+        d="M27.4 21.6A10.6 10.6 0 0 1 14.4 8.6 10.6 10.6 0 1 0 27.4 21.6Z"/>
+  <rect x="252" y="194" width="50" height="8" rx="4" fill="#46586e"/>
+  <rect x="310" y="195" width="32" height="6" rx="3" fill="#93a3b5"/>
+  <circle cx="386" cy="198" r="4" fill="#e39415"/>
+
+  <!-- submit -->
+  <circle cx="568" cy="198" r="14" fill="#2f6df6"/>
+  <path d="M568 204v-11m-5 5 5-5 5 5" fill="none" stroke="#ffffff" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- the switch waits for the clock -->
+  <path d="M164 186c20 8 30 10 56 10" fill="none" stroke="#8fa3ba" stroke-width="2.2"
+        stroke-linecap="round" stroke-dasharray="6 7"/>
+  <path d="M218 191l8 5-8 4z" fill="#8fa3ba"/>
+</svg>
