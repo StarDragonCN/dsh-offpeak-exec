@@ -1,3 +1,3 @@
 - insert:
     - id: offpeak-exec
-      name: '@local/dsh-offpeak-exec'
+      name: 'dsh-offpeak-exec'

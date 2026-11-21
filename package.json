@@ -1,7 +1,6 @@
 {
-  "name": "@local/dsh-offpeak-exec",
+  "name": "dsh-offpeak-exec",
   "version": "1.0.0",
-  "private": true,
   "type": "module",
   "description": "Off-peak run switch for DSH: hold messages sent during DeepSeek peak pricing and start them when off-peak rates apply.",
   "license": "MIT",
@@ -22,6 +21,9 @@
   "bugs": {
     "url": "https://github.com/StarDragonCN/dsh-offpeak-exec/issues"
   },
+  "engines": {
+    "node": ">=20"
+  },
   "exports": {
     ".": "./index.js",
     "./client": "./client.js",
@@ -34,8 +36,12 @@
     "cordis.patch.yml",
     "locale/*.json",
     "docs",
-    "icon.svg"
+    "icon.svg",
+    "README.zh-CN.md"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "node test/host.test.mjs && node test/client.test.mjs && node test/client-state.test.mjs"
   },

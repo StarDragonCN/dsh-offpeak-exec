@@ -1,93 +1,91 @@
-# 谷时执行 · Off-peak run
+# Off-peak run · 谷时执行
 
-一个 DeepSeek Harness（DSH）插件：在对话里加一个开关，把**高峰时段发出的消息**按住，等到**谷时**再真正发起请求。
+**English** | [简体中文](README.zh-CN.md)
 
-因为等待期间不向模型发出任何请求，所以等待本身不花钱；同样的 token 在谷时只付约一半的价钱。
+[![test](https://github.com/StarDragonCN/dsh-offpeak-exec/actions/workflows/ci.yml/badge.svg)](https://github.com/StarDragonCN/dsh-offpeak-exec/actions/workflows/ci.yml)
 
-![谷时执行](docs/preview.svg)
+A [DeepSeek Harness](https://github.com/deepseek-ai/dsh) (DSH) plugin that puts a switch next to the composer. While the switch is on, a message you send during **DeepSeek peak pricing** is held, and only starts when **off-peak rates** apply.
 
-> **English** — A [DeepSeek Harness](https://github.com/deepseek-ai/dsh) (DSH) plugin. It adds a switch next to the composer. While it is on, a message you send during DeepSeek peak pricing (Beijing time, workdays `09:00–12:00` and `14:00–18:00`) is held and only starts at the next off-peak hour — `12:00`, `18:00`, or `09:00` on the next workday. No model request is made while waiting, so waiting costs nothing, and off-peak pricing is roughly half of peak. Messages sent while a task is already running are held the same way. The switch is per conversation, off by default, and returns to off when the Host restarts.
+No model request is made while waiting, so waiting itself is free — and the same tokens cost roughly half once the clock reaches off-peak.
 
-## 它解决什么
+![Off-peak run](docs/preview.svg)
 
-DeepSeek 按北京时间分时段计价：工作日 `09:00–12:00`、`14:00–18:00` 为高峰，其余时间（含周末、法定假日、以及周五 18:00 之后的整个周末）为谷时，谷时价格约为高峰的一半。
+## Install
 
-写代码、跑长任务这类「不急但烧 token」的活儿，放在谷时做最划算。但人往往是想到就发——这个插件让你照常发，由它负责等。
+```text
+npm install dsh-offpeak-exec
+```
 
-## 行为
+In DSH, add it from the plugins page (**Plugins → Add plugin**, enter `dsh-offpeak-exec`), or ask the agent to install it — the agent calls:
 
-开关打开（ON）后：
+```text
+plugin_manager action: "install_bundle" target: "dsh-offpeak-exec"
+```
 
-| 情况 | 结果 |
+Either path installs the package from npm into the current profile and enables it as a bundle. Refresh the Web page afterwards; the switch appears in the composer tool row, on the left.
+
+Installing from a local checkout works the same way — point `target` at the directory instead of the package name.
+
+## Behavior
+
+With the switch ON:
+
+| Situation | Result |
 | --- | --- |
-| 当前处于谷时 | 消息立即执行 |
-| 当前处于高峰 | 消息进入对话，但**不发起模型请求**，等到最近的谷时起点（`12:00`、`18:00` 或次日 `09:00`）自动开始 |
-| 任务执行中你又发了一条（高峰期） | 同样按住，等到谷时；纯工具续跑的步骤不受影响 |
-| 等待中你点「停止」 | 取消本轮，需重新发送 |
-| 等待中你关掉开关 | 立刻放行，按高峰价现在执行 |
+| Currently off-peak | Runs immediately |
+| Currently peak | The message appears in the conversation, but **no model request is made** until the next off-peak start (`12:00`, `18:00`, or `09:00` next workday) |
+| You send another message while a task is running (peak) | Held the same way; tool-only continuation steps are never delayed |
+| You press stop while waiting | The turn is cancelled and has to be sent again |
+| You turn the switch off while waiting | The held message is released immediately and runs at peak price |
 
-开关关闭（OFF）时行为与原生完全一致。
+With the switch OFF, behavior is exactly as before.
 
-其它细节：
+Other details:
 
-- 开关**按对话隔离**，只影响当前会话；刷新页面、切换会话后状态依然正确显示。
-- Host 重启后开关回到关闭状态（不做持久化，避免你以为省了钱其实没有）。
-- 等待最长约 3 小时（`09:00` 等到 `12:00` 是最坏情况）。
-- 等待期间会话显示为「运行中」，按钮上会显示「已排队 · 12:00 自动执行」。
+- The switch is **per conversation**. It survives a page refresh and keeps showing the right state when you switch sessions.
+- After a Host restart the switch returns to off — status is not persisted, so you never believe you saved money when you did not.
+- The longest wait is about 3 hours (`09:00 → 12:00` is the worst case).
+- While waiting, the conversation shows a running state and the switch reads "Queued · runs at 12:00".
 
-## 安装
-
-需要 DSH 的 `plugin_manager`（设置里或通过对话）。把插件目录装进当前 profile：
+## Also without the mouse
 
 ```text
-plugin_manager action: "install_bundle" target: "<插件目录绝对路径>"
+/offpeak          toggle the switch
+/offpeak on       turn it on
+/offpeak off      turn it off
+/offpeak status   show state and the next off-peak time
 ```
 
-安装后刷新 Web 页面，输入框左侧工具行会出现「谷时执行」开关。
+## Where the peak hours come from
 
-命令行等价方式：`dsh plugin install <插件目录>`。
+The rules are hard-coded in the plugin (`index.js` and `client.js` each carry a copy; the client one drives the countdown):
 
-插件是 bundle 形式（`package.json` 里 `dsh.bundle.patch` 指向 `cordis.patch.yml`），安装只写 profile 的 `package.json` 与 bundles 列表，不改你的 `cordis.patch.yml`。
+- Peak windows: Beijing time, workdays `09:00–12:00` and `14:00–18:00`.
+- Public holidays count as off-peak; make-up workdays (调休) count as workdays. `HOLIDAYS_BY_YEAR` ships the full 2026 table.
+- Years without a table fall back to a plain weekday check.
 
-## 也可以不用鼠标
+> That means **2027 needs its table added**, otherwise statutory holidays are treated as workdays. The table is updated once a year — pull requests welcome.
 
-```text
-/offpeak          切换开关
-/offpeak on       打开
-/offpeak off      关闭
-/offpeak status   查看当前状态与下次谷时时刻
-```
+The pricing and window facts come from DeepSeek's official pricing page (`api-docs.deepseek.com`). If they move the windows, only the two hour ranges inside `isPeakBeijing` need to change.
 
-## 峰谷规则从哪来
+## Development
 
-规则硬编码在插件里（`index.js` / `client.js` 各一份，客户端那份用于显示倒计时）：
-
-- 峰窗：北京时间工作日 `09:00–12:00`、`14:00–18:00`。
-- 法定假日按谷时计，调休补班日按工作日计；`HOLIDAYS_BY_YEAR` 里内置了 2026 年全年的放假/补班表。
-- 表外年份回退到自然周末判断（`周一到周五` 视为工作日）。
-
-> 也就是说：**2027 年需要补表**，否则法定假日会被当成工作日。节假日表每年更新一次，欢迎 PR。
-
-定价与时段的事实来源是 DeepSeek 官方定价页（`api-docs.deepseek.com` 的分时计价说明）。如果官方改了峰窗，改 `isPeakBeijing` 里那两行区间即可。
-
-## 开发
-
-无构建步骤，纯 ESM。`client.js` 由 DSH 前端用 `window.__ModuleLoader__` 加载，`index.js` 跑在 Host。
+No build step, plain ESM. `client.js` is loaded by the DSH frontend through `window.__ModuleLoader__`; `index.js` runs in the Host.
 
 ```bash
 node --check index.js && node --check client.js
-npm test        # 用 node 跑三个测试，无需装依赖
+npm test        # three test files, no dependencies to install
 ```
 
-测试覆盖：峰谷/假日边界（含国庆、调休补班）、Host 门禁（挂起、abort、轮内插话、关闭放行）、客户端渲染与点击链路（用极简 React 替身，不依赖真实 react）。
+Coverage: peak/off-peak and holiday edges (including a national holiday and a make-up workday), the Host gate (suspend, abort, mid-turn messages, release on switch-off), and the client render/click path (using a minimal React stand-in, not the real react).
 
-改 Host 侧代码（`index.js`）需要重启 DSH 才生效；改客户端（`client.js`）刷新页面即可。
+Host-side changes (`index.js`) need a DSH restart; client changes (`client.js`) only need a page refresh.
 
-## 限制
+## Limitations
 
-- 只在 Web 端有开关；Host 侧命令在任何前端都可用。
-- 开关状态不做持久化，Host 重启即关闭。
-- 时区固定按北京时间（UTC+8）计算，不跟随本机时区。
+- The switch UI is Web-only; the Host command works in every frontend.
+- Switch state is not persisted: a Host restart turns it off.
+- Times are always computed in Beijing time (UTC+8), not the local time zone.
 
 ## License
 
