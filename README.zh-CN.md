@@ -1,6 +1,6 @@
 # 谷时执行 · Off-peak run
 
-[English](README.md) | **简体中文**
+[English](https://github.com/StarDragonCN/dsh-offpeak-exec/blob/main/README.md) | **简体中文**
 
 [![test](https://github.com/StarDragonCN/dsh-offpeak-exec/actions/workflows/ci.yml/badge.svg)](https://github.com/StarDragonCN/dsh-offpeak-exec/actions/workflows/ci.yml)
 

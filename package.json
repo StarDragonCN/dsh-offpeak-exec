@@ -1,6 +1,6 @@
 {
   "name": "dsh-offpeak-exec",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "Off-peak run switch for DSH: hold messages sent during DeepSeek peak pricing and start them when off-peak rates apply.",
   "license": "MIT",
